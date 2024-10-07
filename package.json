@@ -2,7 +2,8 @@
   "name": "@wuchuheng/react",
   "scripts": {
     "build": "tsc",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "dev": "ts-node bin/cli.ts"
   },
   "version": "0.0.6",
   "description": "React project template",

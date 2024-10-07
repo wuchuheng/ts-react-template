@@ -1,0 +1,91 @@
+name: Test Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call: # Add this line to make the workflow reusable
+
+jobs:
+  test-express-cli-installation-and-execution:
+    runs-on: ubuntu-latest # This can be any GitHub-hosted runner
+    env:
+      CONTAINER_NAME: 'ubuntu-22-04'
+      WORKSPACE_DIR: '/workspace'
+
+    steps:
+      - name: Run the container
+        run: |
+          docker run -itd --name ${CONTAINER_NAME} ubuntu:22.04
+            docker exec ${CONTAINER_NAME} bash -c "
+              apt-get update
+              apt-get install -y curl git  # Add any other packages you need
+            "
+      - name: Install nvm.
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+          "
+      - name: Install Node.
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c '
+            echo hello
+            export NVM_DIR="$HOME/.nvm"; 
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install 20.17.0
+            nvm alias default 20.17.0
+            nvm use 20.17.0
+            node -v
+          '
+      - name: Install pnpm
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c '
+            export NVM_DIR="$HOME/.nvm"; 
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm install -g pnpm
+            pnpm -v
+          '
+      - name: Test the cli
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c '
+            export NVM_DIR="$HOME/.nvm"; 
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            echo y | npx @wuchuheng/react my-app
+          '
+      - name: Check the dependencies is installed or not, if not, exit code 127.
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c '
+            export NVM_DIR="$HOME/.nvm"; 
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd my-app
+            ls -ahl
+            
+            # Check the dependencies is installed or not,
+            if [ ! -d node_modules ]; then
+              echo "Error: The dependencies is not installed."
+              exit 127
+            fi
+          '
+
+      - name: Check the programm can be executed or not. if not, exit code 127.
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c '
+            export NVM_DIR="$HOME/.nvm"; 
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd my-app
+            
+            # Start the program in the background and capture its PID
+            pnpm run dev & APP_PID=$!
+
+            # Wait for 10 seconds
+            sleep 10
+
+            # Check if the process is still running
+            if ps -p $APP_PID > /dev/null; then
+              kill -9 $APP_PID
+            else
+              echo "Error: The program has already exited unexpectedly."
+              exit 127
+            fi
+          '

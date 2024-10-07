@@ -1,0 +1,50 @@
+name: Release NPM Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Update new version to package.json
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          pnpm version $VERSION --no-git-tag-version
+
+      - name: Publish to NPM
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # The permission to write for the repository has to be maked in the repository > settings > action > Workflow permissions
+      - name: Commit and push changes
+        run: |
+          # Set username and email for git
+          git config --global user.name "wuchuheng"
+          git config --global user.email "root@wuchuheng.com"
+          git checkout -b main
+
+          git add .
+          git commit -m "Bump version to ${GITHUB_REF#refs/tags/}"
+          git remote add token https://${GIT_ACCESS_TOKEN}@github.com/wuchuheng/ts-react-template.git
+
+          git push token main
+        env:
+          GIT_ACCESS_TOKEN: ${{ secrets.GIT_ACCESS_TOKEN }}

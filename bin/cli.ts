@@ -1,8 +1,7 @@
-import fs from 'fs'
-import path from "path";
-import { execSync } from "child_process";
-import { Command } from 'commander';
-
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { exit } from 'process';
 
 /**
 /**
@@ -20,109 +19,101 @@ import { Command } from 'commander';
  * 
  * @throws {Error} If the directory name is not provided or if any operation fails.
  */
-function main() {
-    // 1. Handling input.
-    // // 1.1 Get the directory name from the command line arguments.
-    // const projectName = process.argv[2] || 'my-react-app';
-    // // 1.1.1 Validate the project name is not created in the current directory.
-    // const currentDir = process.cwd();
-    // const projectDir = path.join(currentDir, projectName);
-    // if (fs.existsSync(projectDir)) {
-    //     throw new Error(`Directory ${projectName} already exists.`);
-    // }
+async function main() {
+  // 1. Handling input.
+  // 1.1 Get the directory name from the command line arguments.
+  const projectName = getProjectNameFromArgs();
 
-    const program = new Command();
+  // 1.2 Validate the cli `pnpm` is installed.
+  validatePnpm();
 
-    program
-      .name('@wuchuheng/react')
-      .description('CLI to create a new React project')
-      .argument('<directory>', 'Directory to create the project in', 'my-react-app') // Set default value
-      .action((directory) => {
-        const currentDir = process.cwd();
-        const projectDir = path.join(currentDir, directory);
-        if (fs.existsSync(projectDir)) {
-          console.error(`Error: Directory ${directory} already exists.`);
-          process.exit(1);
-        }
-        console.log(`Creating project in ${directory}...`);
-        // Add your project creation logic here
-      });
-  
-    program.parse(process.argv);
+  // 2. Process the logic.
+  // 2.1 Copy template project.
+  console.log('Copying project files...');
+  fs.cpSync(path.join(__dirname, '../template'), projectName, { recursive: true });
 
+  // 2.2 go into the project directory and install dependencies.
+  console.log('Installing dependencies...');
+  execSync('cd ' + projectName + ' && pnpm install', { stdio: 'inherit' });
 
-    // 2. Process the logic.
-    // 3. Return the result.
+  // 2.3 Print the success message in the terminal in green blod color
 
+  printSuccessMessage(projectName);
+  // 3. Return the result.
 }
 
 main();
 
-// const projectName = process.argv[2];
-// const currentDir = process.cwd();
-// const projectDir = path.join(currentDir, projectName);
+/**
+ * Get the project name from the command line arguments.
+ *
+ * @returns {string} The project name.
+ * @throws {Error} If the directory name is not provided.
+ */
+function getProjectNameFromArgs() {
+  // 1. Process the input from the command line.
 
-// if (process.argv.length < 3) {
-//   console.log("You have to provide a name to your app.");
-//   console.log("For example :");
-//   console.log("    npx @wuchuheng/express my-app");
-//   process.exit(1);
-// }
+  // 1.1 Get the project name from the command line arguments.
+  const args = process.argv.slice(2);
+  let projectName = 'my-react-app';
+  if (args.length !== 0) {
+    projectName = args[0];
+  }
 
-// async function main() {
-//   try {
-//     console.log("Copying project files...");
-//     await copyDir(path.join(__dirname, "../template"), projectDir);
+  // 1.2 If the first argument is --help, print the help message and exit.
+  const helpFlagList = ['-h', '--help', '-help'];
+  const helpFlag = args.find((arg) => helpFlagList.includes(arg));
+  if (helpFlag) {
+    printHelpMessage();
 
-//     console.log("Installing dependencies...");
-//     execSync(`cd ${projectDir} && pnpm install && pnpm run build`);
+    exit(0);
+  }
 
-//     console.log("The installation is done!");
-//     console.log(`Done. Now run:`);
+  // 2. Process the logic.
+  // 2.1 Validate the project name.
+  if (fs.existsSync(projectName)) {
+    console.error(`Directory ${projectName} already exists.`);
+    exit(1);
+  }
 
-//     console.log(`\x1b[1m\x1b[32m
-// cd ${projectName}
-// pnpm install
-// pnpm dev \x1b[0m
-// `);
-//   } catch (error) {
-//     console.error("An error occurred:", error.message);
-//     process.exit(1);
-//   }
-// }
+  // 3. Return the result.
 
-// // Helper function to copy directory recursively
-// function copyDir(src, dest) {
-//   return new Promise((resolve, reject) => {
-//     fs.mkdir(dest, { recursive: true }, (err) => {
-//       if (err) return reject(err);
+  return projectName;
+}
 
-//       fs.readdir(src, { withFileTypes: true }, (err, entries) => {
-//         if (err) return reject(err);
+/**
+ * Print the help message.
+ */
+function printHelpMessage() {
+  console.log('Usage: pnpx @wuchuheng/react <directory>');
+  console.log('Version: 0.0.1');
+  console.log('Create a new React project with a modern tech stack.');
+  console.log('');
+}
 
-//         let completed = 0;
-//         if (entries.length === 0) resolve();
+/**
+ * Validate the pnpm is installed.
+ */
+function validatePnpm() {
+  try {
+    execSync('pnpm --version', { stdio: 'ignore' });
+  } catch (error) {
+    console.error('pnpm is not installed. Please install pnpm first.');
+    exit(1);
+  }
+}
 
-//         entries.forEach((entry) => {
-//           const srcPath = path.join(src, entry.name);
-//           const destPath = path.join(dest, entry.name);
-
-//           if (entry.isDirectory()) {
-//             copyDir(srcPath, destPath)
-//               .then(() => {
-//                 if (++completed === entries.length) resolve();
-//               })
-//               .catch(reject);
-//           } else {
-//             fs.copyFile(srcPath, destPath, (err) => {
-//               if (err) return reject(err);
-//               if (++completed === entries.length) resolve();
-//             });
-//           }
-//         });
-//       });
-//     });
-//   });
-// }
-
-// main();
+/**
+ * Print the success message.
+ *
+ * @param {string} projectName - The name of the project.
+ */
+function printSuccessMessage(projectName: string) {
+  const blodGreedPrint = (message: string) => {
+    console.log(`\x1b[1;32m${message}\x1b[0m`); // Green bold color
+  };
+  blodGreedPrint('Project created successfully.');
+  blodGreedPrint(`To start the development server, run:`);
+  blodGreedPrint(`cd ${projectName} && pnpm dev`);
+  console.log('');
+}
