@@ -8,7 +8,7 @@
   "version": "0.0.7",
   "description": "React project template",
   "bin": {
-    "@wuchuheng/react": "./dist/cli.js"
+    "@wuchuheng/react": "node ./dist/cli.js"
   },
   "keywords": [
     "react",
