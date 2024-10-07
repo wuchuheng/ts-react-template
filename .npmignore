@@ -9,3 +9,4 @@ CONTRIBUTING.md
 eslint.config.js
 push.sh
 tsconfig.json
+.git
