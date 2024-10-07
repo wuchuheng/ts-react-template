@@ -5,10 +5,10 @@
     "prepack": "pnpm build",
     "dev": "ts-node bin/cli.ts"
   },
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "React project template",
   "bin": {
-    "@wuchuheng/react": "node ./dist/cli.js"
+    "@wuchuheng/react": "./dist/cli.js"
   },
   "keywords": [
     "react",
