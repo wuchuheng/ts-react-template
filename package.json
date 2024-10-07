@@ -1,0 +1,18 @@
+{
+  "name": "@wuchuheng/react",
+  "version": "0.0.2",
+  "description": "React project template",
+  "bin": {
+    "@wuchuheng/react": "./bin/cli.js"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "template",
+    "cli",
+    "ts-react-template",
+    "ts-react"
+  ],
+  "author": "wuchuheng",
+  "license": "MIT"
+}
