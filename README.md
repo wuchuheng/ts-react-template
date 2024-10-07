@@ -22,7 +22,7 @@
 To create a new project using this template, run the following command:
 
 ```bash
-npx @wuchuheng/react my-app
+pnpx @wuchuheng/react my-app
 ```
 
 Replace `my-app` with your desired project name.
