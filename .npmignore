@@ -10,3 +10,7 @@ eslint.config.js
 push.sh
 tsconfig.json
 .git
+
+!template/.vscode
+!template/.gitignore
+!template/.prettierrc
