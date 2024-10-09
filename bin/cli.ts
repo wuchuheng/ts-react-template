@@ -28,9 +28,9 @@ async function main() {
   validatePnpm();
 
   // 2. Process the logic.
-  // 2.1 Copy template project.
+  // 2.1 Copy template project, including dotfiles.
   console.log('Copying project files...');
-  fs.cpSync(path.join(__dirname, '../template'), projectName, { recursive: true });
+  fs.cpSync(path.join(__dirname, '../template'), projectName, { recursive: true, force: true });
 
   // 2.2 go into the project directory and install dependencies.
   console.log('Installing dependencies...');
