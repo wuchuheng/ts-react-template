@@ -41,6 +41,7 @@ jobs:
           git config --global user.email "root@wuchuheng.com"
           git checkout -b main
 
+          git pull origin main
           git add .
           git commit -m "Bump version to ${GITHUB_REF#refs/tags/}"
           git remote add token https://${GIT_ACCESS_TOKEN}@github.com/wuchuheng/ts-react-template.git
