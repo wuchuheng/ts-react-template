@@ -20,8 +20,15 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-
-      'no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: false,
+          argsIgnorePattern: '^_',
+        },
+      ],
       'no-undef': 'error',
       'object-shorthand': ['error', 'always'],
       'prefer-arrow-callback': ['error', { allowNamedFunctions: false }],
