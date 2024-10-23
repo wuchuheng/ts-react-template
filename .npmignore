@@ -11,6 +11,17 @@ push.sh
 tsconfig.json
 .git
 
-!template/.vscode
 !template/.gitignore
 !template/.prettierrc
+!template/.vscode
+!template/README.md
+!template/eslint.config.js
+!template/index.html
+!template/package.json
+!template/pnpm-lock.yaml
+!template/public
+!template/src
+!template/tsconfig.app.json
+!template/tsconfig.json
+!template/tsconfig.node.json
+!template/vite.config.ts
