@@ -5,7 +5,7 @@
     "prepack": "pnpm build",
     "dev": "ts-node bin/cli.ts"
   },
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "React project template",
   "bin": {
     "@wuchuheng/react": "./dist/cli.js"
