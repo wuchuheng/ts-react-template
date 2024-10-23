@@ -36,7 +36,13 @@ async function main() {
   console.log('Installing dependencies...');
   execSync('cd ' + projectName + ' && pnpm install', { stdio: 'inherit' });
 
-  // 2.3 Print the success message in the terminal in green blod color
+  // 2.3 If the git is installed, initialize a git repository.
+  const gitInstalled = execSync('git --version', { stdio: 'ignore' });
+  if (gitInstalled) {
+    execSync('cd ' + projectName + ' && git init', { stdio: 'inherit' });
+  }
+
+  // 2.4 Print the success message in the terminal in green blod color
 
   printSuccessMessage(projectName);
   // 3. Return the result.
