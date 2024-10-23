@@ -12,10 +12,6 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-      parser: tseslint.parser,
-      parserOptions: {
-        project: './tsconfig.app.json',
-      },
     },
     plugins: {
       'react-hooks': reactHooks,
@@ -24,6 +20,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -33,7 +30,6 @@ export default tseslint.config(
           argsIgnorePattern: '^_',
         },
       ],
-      'no-undef': 'error',
       'object-shorthand': ['error', 'always'],
       'prefer-arrow-callback': ['error', { allowNamedFunctions: false }],
       'arrow-body-style': ['error', 'as-needed'],
