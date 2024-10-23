@@ -1,4 +1,4 @@
-# Contributing to @wuchuheng/express
+# Contributing to @wuchuheng/react
 
 We appreciate your interest in contributing to @wuchuheng/express. This document provides guidelines for contributing to the project, with a focus on how to release new versions.
 
@@ -11,33 +11,28 @@ We appreciate your interest in contributing to @wuchuheng/express. This document
 
 ## Releasing a New Version
 
-To release a new version of @wuchuheng/express, follow these steps:
+To release a new version of @wuchuheng/react, follow these steps:
 
-1. Ensure all tests pass and the code is up to date with the main branch.
-
-2. Update the version number in `package.json` according to semantic versioning principles.
-
-3. Update the `CHANGELOG.md` file with details of the changes in the new version.
-
-4. Commit these changes with a message like "Bump version to x.x.x".
-
-5. Create a new tag for the version:
+1. Tag a new version with the "v" prefix like "v0.0.22".
 
    ```
-   git tag -a vx.x.x -m "Version x.x.x"
+   git tag -a v0.0.22 -m "Version 0.0.22"
    ```
 
-6. Push the changes and the new tag to GitHub:
+2. Push the tag to the remote repository. like this:
 
    ```
-   git push origin main
-   git push origin vx.x.x
+   git push main v0.0.22
    ```
 
-7. The GitHub Actions workflow will automatically build and publish the new version to npm.
+3. The GitHub Actions workflow will automatically do the following things:
 
-8. After the release, update the `README.md` file if necessary with any new features or changes.
+   - Update the version number in `package.json`
+   - Build the project
+   - Publish the project to npm
 
-Please ensure you have the necessary permissions to push to the main branch and create releases. If you don't, please contact a project maintainer.
-
-Thank you for your contributions to @wuchuheng/express!
+4. After the release success, you have to fetch the new commit locally for the `package.json` file. because the new version number is updated in the remote repository by the GitHub Actions workflow.
+   ```
+   git pull origin main
+   ```
+5. Done.
