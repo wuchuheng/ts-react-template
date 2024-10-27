@@ -1,8 +1,8 @@
-import reactLogo from './assets/react.svg';
+import reactLogo from '../../assets/react.svg';
 import viteLogo from '/vite.svg';
-import './App.css';
-import { useSetCountThunk } from './store/slices/counterSlice';
-import { useAppSelector } from './store';
+import './index.css';
+import { useSetCountThunk } from '../../store/slices/counterSlice';
+import { useAppSelector } from '../../store';
 
 function App() {
   const setCount = useSetCountThunk();
