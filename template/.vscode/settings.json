@@ -3,9 +3,18 @@
   "eslint.run": "onSave",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-  "[typescript]": {},
-
   "editor.codeActionsOnSave": {
+    // Auto fix all eslint error when save.
+    "source.fixAll.eslint": "explicit",
+    // Auto organize imports when save
+    "source.organizeImports": "explicit",
+    // Auto remove unused imports when save
+    "source.removeUnused": "explicit",
+    // Auto fix all problems when save
+    "source.fixAll": "explicit"
+  },
+
+  "}editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   }
 }

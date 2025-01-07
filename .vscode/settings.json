@@ -3,8 +3,9 @@
   "eslint.run": "onSave",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.removeUnused": true
+    "source.fixAll.eslint": "explicit",
+    "source.removeUnused": "explicit",
+    "source.fixAll": "explicit"
   },
 
   "[typescript]": {}
